@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "@types/cannon": "^0.1.8",
     "@types/three": "^0.147.0",
     "eslint": "^8.30.0",
     "eslint-config-semistandard": "^17.0.0",
