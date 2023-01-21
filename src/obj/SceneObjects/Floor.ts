@@ -2,23 +2,23 @@ import Scene from "../Scene";
 import * as THREE from "three";
 import { Mesh } from "three";
 import SceneObject from "./SceneObject";
-import * as CANNON from "cannon";
+import { Plane, Vec3, Body } from "cannon-es";
 import World from "../World";
 
 export default class Floor implements SceneObject {
-    physicInstance: CANNON.Body;
+    physicInstance: Body;
     instance: Mesh<THREE.PlaneGeometry, THREE.MeshStandardMaterial>;
 
     constructor(scene: Scene, private world: World) {
         // Create a plane in CANNON world
-        const floorShape = new CANNON.Plane();
-        this.physicInstance = new CANNON.Body({
+        const floorShape = new Plane();
+        this.physicInstance = new Body({
             mass: 0,
             shape: floorShape
         });
         // Rotate the floor
         this.physicInstance.quaternion.setFromAxisAngle(
-            new CANNON.Vec3(1, 0, 0),
+            new Vec3(1, 0, 0),
             -Math.PI / 2
         );
         this.world.instance.addBody(this.physicInstance);

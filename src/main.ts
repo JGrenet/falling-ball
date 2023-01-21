@@ -5,9 +5,9 @@ import Scene from "./obj/Scene";
 import World from "./obj/World";
 import "./style.css";
 
-const scene = new Scene(true);
-
 const world = new World();
+
+const scene = new Scene(true, world);
 
 // Floor
 const floor = new Floor(scene, world);
@@ -18,4 +18,4 @@ const plank = new Plank(scene, world);
 // Ball
 const ball = new Ball(scene, world);
 
-scene.render(world, [ball, floor, plank]);
+scene.render([ball, floor, plank]);

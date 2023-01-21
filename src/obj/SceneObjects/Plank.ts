@@ -1,16 +1,16 @@
 import Scene from "../Scene";
 import * as THREE from "three";
 import { Mesh } from "three";
-import * as CANNON from "cannon";
 import SceneObject from "./SceneObject";
 import World from "../World";
+import { Body, Box, Vec3 } from "cannon-es";
 
 const PLANK_HEIGHT = 0.5;
 const PLANK_WIDTH = 3;
 const PLANK_DEPTH = 3;
 
 export default class Plank implements SceneObject {
-    physicInstance: CANNON.Body;
+    physicInstance: Body;
     instance: Mesh<THREE.BoxGeometry, THREE.MeshStandardMaterial>;
 
     constructor(scene: Scene, private world: World) {
@@ -21,14 +21,16 @@ export default class Plank implements SceneObject {
         };
 
         // Create a box in CANNON world
-        const boxShape = new CANNON.Box(
-            new CANNON.Vec3(PLANK_WIDTH, PLANK_HEIGHT, PLANK_DEPTH)
+        const boxShape = new Box(
+            new Vec3(PLANK_WIDTH / 2, PLANK_HEIGHT / 2, PLANK_DEPTH / 2)
         );
-        this.physicInstance = new CANNON.Body({
-            mass: 1,
+        this.physicInstance = new Body({
+            mass: 0,
             shape: boxShape,
-            position: new CANNON.Vec3(position.x, position.y, position.z)
+            position: new Vec3(position.x, position.y, position.z),
+            type: Body.STATIC
         });
+
         this.world.instance.addBody(this.physicInstance);
 
         // Create a sphere in THREE.js world

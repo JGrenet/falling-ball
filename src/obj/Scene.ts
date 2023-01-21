@@ -2,6 +2,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import * as THREE from "three";
 import World from "./World";
 import SceneObject from "./SceneObjects/SceneObject";
+import CannonDebugger from "cannon-es-debugger";
 
 export default class Scene {
     // Canvas
@@ -12,11 +13,13 @@ export default class Scene {
     threeScene: THREE.Scene;
 
     // Scene utils
-    camera: THREE.PerspectiveCamera;
-    cameraControls: OrbitControls;
-    webGlRenderer: THREE.WebGLRenderer;
+    camera!: THREE.PerspectiveCamera;
+    cameraControls!: OrbitControls;
+    webGlRenderer!: THREE.WebGLRenderer;
+    // @ts-ignore
+    cannonDebugRenderer!: CannonDebugger;
 
-    constructor(axesHelper: boolean = false) {
+    constructor(axesHelper: boolean = false, private world: World) {
         const canvas = document.querySelector("canvas.webgl") as HTMLElement;
 
         // Scene
@@ -34,6 +37,13 @@ export default class Scene {
         // global Light
         const ambientLight = new THREE.AmbientLight(0xffffff, 1);
         this.threeScene.add(ambientLight);
+
+        // Enable Cannon debug renderer
+        // @ts-ignore
+        this.cannonDebugRenderer = new CannonDebugger(
+            this.threeScene,
+            this.world.instance
+        );
 
         // Axes helpers
         if (axesHelper) {
@@ -91,24 +101,27 @@ export default class Scene {
         this.webGlRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     }
 
-    public render(world: World, objs: SceneObject[]) {
+    public render(objs: SceneObject[]) {
         // Update controls
         this.cameraControls.update();
 
         // Step the physics simulation
-        world.instance.step(1 / 60);
+        this.world.instance.step(1 / 60);
 
         // Update objects
         objs.forEach(obj => {
             obj.onRender();
         });
 
+        // Update debug renderer
+        this.cannonDebugRenderer.update();
+
         // Render
         this.webGlRenderer.render(this.threeScene, this.camera);
 
         // Call tick again on the next frame
         window.requestAnimationFrame(() => {
-            this.render(world, objs);
+            this.render(objs);
         });
     }
 }

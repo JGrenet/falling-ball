@@ -1,28 +1,29 @@
 import Scene from "../Scene";
 import * as THREE from "three";
 import { Mesh } from "three";
-import * as CANNON from "cannon";
+import { Sphere, Vec3, Body } from "cannon-es";
 import World from "../World";
 import SceneObject from "./SceneObject";
 
 export default class Ball implements SceneObject {
-    physicInstance: CANNON.Body;
+    physicInstance: Body;
     instance: Mesh<THREE.SphereGeometry, THREE.MeshStandardMaterial>;
 
     constructor(scene: Scene, private world: World) {
         const position = {
             x: 0,
-            y: 2,
+            y: 5,
             z: 0
         };
 
         // Create a sphere in CANNON world
-        const sphereShape = new CANNON.Sphere(1);
-        this.physicInstance = new CANNON.Body({
-            mass: 1,
-            position: new CANNON.Vec3(position.x, position.y, position.z),
+        const sphereShape = new Sphere(1);
+        this.physicInstance = new Body({
+            mass: 2,
+            position: new Vec3(position.x, position.y, position.z),
             shape: sphereShape
         });
+
         this.world.instance.addBody(this.physicInstance);
 
         // Create a sphere in THREE.js world
