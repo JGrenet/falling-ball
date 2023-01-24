@@ -3,6 +3,7 @@ import * as THREE from "three";
 import World from "./World";
 import SceneObject from "./SceneObjects/SceneObject";
 import CannonDebugger from "cannon-es-debugger";
+import * as dat from "lil-gui";
 
 export default class Scene {
     // Canvas
@@ -19,7 +20,11 @@ export default class Scene {
     // @ts-ignore
     cannonDebugRenderer!: CannonDebugger;
 
-    constructor(axesHelper: boolean = false, private world: World) {
+    constructor(
+        axesHelper: boolean = false,
+        private world: World,
+        private gui: dat.GUI
+    ) {
         const canvas = document.querySelector("canvas.webgl") as HTMLElement;
 
         // Scene
@@ -82,8 +87,15 @@ export default class Scene {
             100
         );
 
-        this.camera.position.set(10, 6, 8);
+        this.camera.position.set(0, 1, 13);
         this.threeScene.add(this.camera);
+
+        // Camera GUI
+        const cameraFolder = this.gui.addFolder("Camera");
+        cameraFolder.add(this.camera.position, "x").min(-10).max(10).step(0.01);
+        cameraFolder.add(this.camera.position, "y").min(-10).max(10).step(0.01);
+        cameraFolder.add(this.camera.position, "z").min(-10).max(30).step(0.01);
+        cameraFolder.open();
     }
 
     private setupOrbitControls(canvas: HTMLElement) {

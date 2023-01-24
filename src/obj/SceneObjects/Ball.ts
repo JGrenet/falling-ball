@@ -12,14 +12,14 @@ export default class Ball implements SceneObject {
     constructor(scene: Scene, private world: World) {
         const position = {
             x: 0,
-            y: 5,
+            y: 7,
             z: 0
         };
 
         // Create a sphere in CANNON world
         const sphereShape = new Sphere(1);
         this.physicInstance = new Body({
-            mass: 2,
+            mass: 100,
             position: new Vec3(position.x, position.y, position.z),
             shape: sphereShape
         });

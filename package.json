@@ -17,12 +17,12 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-n": "^15.6.0",
     "eslint-plugin-promise": "^6.1.1",
+    "lil-gui": "^0.17.0",
     "typescript": "^4.9.3",
     "vite": "^4.0.0"
   },
   "dependencies": {
     "cannon-es": "^0.20.0",
-    "lil-gui": "^0.17.0",
     "three": "^0.148.0"
   }
 }

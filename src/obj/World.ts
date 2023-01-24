@@ -17,12 +17,13 @@ export default class World {
     createDefaultContactMaterial() {
         const defaultMaterial = new Material("default");
 
+        // The ball is falling way too fast, it needs to be slowed down
         const defaultContactMaterial = new ContactMaterial(
             defaultMaterial,
             defaultMaterial,
             {
-                friction: 1,
-                restitution: 0.2
+                friction: 100,
+                restitution: 0.3
             }
         );
 
