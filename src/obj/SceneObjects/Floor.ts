@@ -26,7 +26,7 @@ export default class Floor implements SceneObject {
         // Create a plane in THREE.js world
         this.instance = new THREE.Mesh(
             new THREE.PlaneGeometry(20, 20),
-            new THREE.MeshStandardMaterial({ color: "#ffffff" })
+            new THREE.MeshStandardMaterial({ transparent: true, opacity: 0 })
         );
         this.instance.receiveShadow = true;
         this.instance.rotation.x = -Math.PI * 0.5;

@@ -22,8 +22,8 @@ export default class World {
             defaultMaterial,
             defaultMaterial,
             {
-                friction: 100,
-                restitution: 0.3
+                friction: 0.5,
+                restitution: 0.5
             }
         );
 

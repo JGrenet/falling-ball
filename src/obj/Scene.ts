@@ -4,6 +4,7 @@ import World from "./World";
 import SceneObject from "./SceneObjects/SceneObject";
 import CannonDebugger from "cannon-es-debugger";
 import * as dat from "lil-gui";
+import Ball from "./SceneObjects/Ball";
 
 export default class Scene {
     // Canvas
@@ -21,9 +22,9 @@ export default class Scene {
     cannonDebugRenderer!: CannonDebugger;
 
     constructor(
-        axesHelper: boolean = false,
+        helpers: boolean = false,
         private world: World,
-        private gui: dat.GUI
+        public gui: dat.GUI
     ) {
         const canvas = document.querySelector("canvas.webgl") as HTMLElement;
 
@@ -43,20 +44,20 @@ export default class Scene {
         const ambientLight = new THREE.AmbientLight(0xffffff, 1);
         this.threeScene.add(ambientLight);
 
-        // Enable Cannon debug renderer
-        // @ts-ignore
-        this.cannonDebugRenderer = new CannonDebugger(
-            this.threeScene,
-            this.world.instance
-        );
-
         // Axes helpers
-        if (axesHelper) {
+        if (helpers) {
             // X axis is Red
             // Y axis is Green
             // Z axis is blue
             const axesHelper = new THREE.AxesHelper(5);
             this.threeScene.add(axesHelper);
+
+            // Enable Cannon debug renderer
+            // @ts-ignore
+            this.cannonDebugRenderer = new CannonDebugger(
+                this.threeScene,
+                this.world.instance
+            );
         }
 
         window.addEventListener("resize", () => {
@@ -87,7 +88,6 @@ export default class Scene {
             100
         );
 
-        this.camera.position.set(0, 1, 13);
         this.threeScene.add(this.camera);
 
         // Camera GUI
@@ -113,9 +113,18 @@ export default class Scene {
         this.webGlRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     }
 
-    public render(objs: SceneObject[]) {
-        // Update controls
-        this.cameraControls.update();
+    public render(objs: SceneObject[], ball: Ball) {
+        // Update controls (activate for debug)
+        // this.cameraControls.update();
+
+        // Update camera position to follow the ball
+        this.camera.lookAt(ball.instance.position);
+
+        this.camera.position.set(
+            ball.instance.position.x + 2,
+            ball.instance.position.y + 0,
+            ball.instance.position.z - 5
+        );
 
         // Step the physics simulation
         this.world.instance.step(1 / 60);
@@ -126,14 +135,16 @@ export default class Scene {
         });
 
         // Update debug renderer
-        this.cannonDebugRenderer.update();
+        if (this.cannonDebugRenderer) {
+            this.cannonDebugRenderer.update();
+        }
 
         // Render
         this.webGlRenderer.render(this.threeScene, this.camera);
 
         // Call tick again on the next frame
         window.requestAnimationFrame(() => {
-            this.render(objs);
+            this.render(objs, ball);
         });
     }
 }
