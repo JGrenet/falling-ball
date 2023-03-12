@@ -6,6 +6,7 @@ import World from "./obj/World";
 import * as dat from "lil-gui";
 import "./style.css";
 import SpotLight from "./obj/SceneObjects/SpotLight";
+import Particles from "./obj/SceneObjects/Particles";
 
 export const INITIAL_X = -10;
 export const INITIAL_Y = 0;
@@ -34,6 +35,9 @@ const ball = new Ball(scene, world);
 
 // Lights (Spotlight)
 new SpotLight(scene);
+
+// Particles
+new Particles(scene);
 
 scene.render([floor, ball, ...planks], ball);
 
